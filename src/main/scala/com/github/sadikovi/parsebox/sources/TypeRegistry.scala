@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.github.sadikovi.parsebox
+package com.github.sadikovi.parsebox.sources
 
 import java.util.{HashSet => JHashSet}
 
 import org.slf4j.LoggerFactory
 import org.apache.spark.sql.types.StructType
 
-import com.github.sadikovi.parsebox.api.RecordType
+import com.github.sadikovi.parsebox.api.{RecordType, Opt1RecordType, Opt2RecordType}
 
 /** Type registry to lookup type information and register external types */
 object TypeRegistry {
@@ -30,7 +30,9 @@ object TypeRegistry {
   private val logger = LoggerFactory.getLogger(getClass())
 
   /** Provided internal types that we know from the beginning */
-  private def providedTypes: Set[Class[_<:RecordType]] = Set.empty
+  private def providedTypes: Set[Class[_<:RecordType]] = Set(
+    classOf[Opt1RecordType],
+    classOf[Opt2RecordType])
 
   /** Check if class is registered already or provided external class */
   def exists(klass: Class[_<:RecordType]): Boolean = {

@@ -16,22 +16,45 @@
 
 package com.github.sadikovi.parsebox.api
 
+import scala.reflect.ClassTag
+
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.types.StructType
 
-import com.github.sadikovi.parsebox.Metrics
+import com.github.sadikovi.parsebox.sources.{Metrics, TypeRegistry}
 
-/** [[ResolvedParser]] interface to provide generic methods to process data and collect metrics */
+/**
+ * [[ResolvedParser]] interface to provide generic methods to process data and collect metrics.
+ * Note that this is very low-level API and it is not recommended to subclass it directly unless
+ * very custom logic is required. Instead, consider using nice wrapping subclasses defined below.
+ */
 abstract class ResolvedParser {
   /**
    * Return collected metrics. Note, since we return DataFrame, before evaluation of it, only
    * certain statistics are available, the rest will be collected after DataFrame materialization.
    */
-  def getMetrics(): Metrics
+  def getMetrics(): Metrics = {
+    throw new UnsupportedOperationException("Not implemented")
+  }
 
   /** Create DataFrame with data */
   def create(): DataFrame
 
   /** Provide data schema for DataFrame */
   def dataSchema(): StructType
+}
+
+/**
+ * [[ExternalParser]] provides API for custom low-level processing using 3rd party package, e.g.
+ * one of the Spark packages, such as JSON, CSV, JDBC, etc. Note that type is defined by provided
+ * record type.
+ */
+abstract class ExternalParser[T <: RecordType](implicit tag: ClassTag[T]) extends ResolvedParser {
+  def create(): DataFrame
+
+  final override def dataSchema(): StructType = {
+    val klass = tag.runtimeClass.asInstanceOf[Class[T]]
+    TypeRegistry.lookupSchema(klass).getOrElse(
+      sys.error(s"Could not resolve schema for type $klass"))
+  }
 }

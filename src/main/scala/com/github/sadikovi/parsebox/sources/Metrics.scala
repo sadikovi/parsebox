@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.sadikovi.parsebox
+package com.github.sadikovi.parsebox.sources
 
 /** [[Metrics]] interface to collect metrics */
 abstract class Metrics

@@ -29,6 +29,7 @@ import com.github.sadikovi.parsebox.api.BaseFormat
 object FormatRegistry {
   /** Cases for resolving different short names for formats */
   private def resolveWithShortName(shortName: String): String = shortName match {
+    case "netflow" => "com.github.sadikovi.parsebox.impl.formats.netflow"
     case otherProvider => otherProvider
   }
 

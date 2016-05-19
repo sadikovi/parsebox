@@ -17,7 +17,7 @@
 package com.github.sadikovi.parsebox.api
 
 import org.apache.spark.sql.Row
-import org.apache.spark.sql.types.StructType
+import org.apache.spark.sql.types.{StructType, StructField, StringType, IntegerType}
 
 /**
  * Abstract [[RecordType]] type for supported records. Subclasses should overwrite methods below,
@@ -46,4 +46,32 @@ abstract class RecordType {
    * }}}
    */
   def dataSchema(): StructType
+}
+
+/**
+ * Custom [[Opt1RecordType]] to hold only one string field.
+ * Used as an example of creating user-defined record type, note that default empty constructor and
+ * mutable fields are provided.
+ */
+class Opt1RecordType(var key: String) extends RecordType {
+  def this() = this(null)
+
+  override def toRow(): Row = Row(key)
+
+  override def dataSchema(): StructType = StructType(
+    StructField("opt1", StringType, true) :: Nil)
+}
+
+/**
+ * Custom [[Opt2RecordType]] to hold only two string fields.
+ * Used as an example of creating user-defined record type, note that default empty constructor and
+ * mutable fields are provided.
+ */
+class Opt2RecordType(var key1: String, var key2: String) extends RecordType {
+  def this() = this(null, null)
+
+  override def toRow(): Row = Row(key1, key2)
+
+  override def dataSchema(): StructType = StructType(
+    StructField("opt1", StringType, true) :: StructField("opt2", StringType, true) :: Nil)
 }

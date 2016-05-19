@@ -19,6 +19,7 @@ package com.github.sadikovi.parsebox
 import scala.collection.mutable.{HashMap => MutableMap}
 
 import org.apache.spark.sql.{SQLContext, DataFrame}
+import org.apache.spark.sql.types.StructType
 
 import com.github.sadikovi.parsebox.api.{BaseFormat, ResolvedParser}
 
@@ -32,6 +33,14 @@ case class FormatReader(
   // Format reader settings that will be pushed down to parser
   private val extraOptions = new MutableMap[String, String]()
 
+  /** Compare both schemas ignoring nullability */
+  private def verifySchemaIgnoreNullability(left: StructType, right: StructType): Boolean = {
+    left.size == right.size &&
+      left.map { field => (field.name, field.dataType) } ==
+        right.map { field => (field.name, field.dataType) }
+  }
+
+  /** Add option to `FormatReader` */
   def option(key: String, value: String): FormatReader = {
     extraOptions += (key -> value)
     this
@@ -42,8 +51,8 @@ case class FormatReader(
     val parser: ResolvedParser = format.createParser(sqlContext, paths, extraOptions.toMap)
     val df = parser.create()
     val providedSchema = parser.dataSchema()
-    require(df.schema == providedSchema, s"Provided schema $providedSchema does not match actual " +
-      s"schema ${df.schema}")
+    require(verifySchemaIgnoreNullability(df.schema, providedSchema),
+      s"Provided schema $providedSchema does not match actual schema ${df.schema}")
     // return DataFrame after validating schema
     df
   }
