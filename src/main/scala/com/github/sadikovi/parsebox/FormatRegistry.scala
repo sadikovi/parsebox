@@ -16,8 +16,45 @@
 
 package com.github.sadikovi.parsebox
 
+import scala.util.{Failure, Success, Try}
+
+import com.github.sadikovi.parsebox.api.BaseFormat
+
+/**
+ * [[FormatRegistry]] interface allows to resolve provider into [[FormatReader]], which defines
+ * entire parsing logic. Note that provider should point to one of the instances of [[BaseFormat]].
+ * Resolves fully qualified class name into provider. Also keeps map of short names for pre-defined
+ * formats.
+ */
 object FormatRegistry {
-  def lookupFormat(provider: String): FormatReader = {
-    null
+  /** Cases for resolving different short names for formats */
+  private def resolveWithShortName(shortName: String): String = shortName match {
+    case otherProvider => otherProvider
+  }
+
+  /**
+   * Look up provider based on class name as string, also look up map of short names for pre-defined
+   * formats.
+   */
+  private[parsebox] def lookupFormat(provider: String): Class[_] = {
+    val provider1 = resolveWithShortName(provider)
+    val provider2 = s"$provider1.DefaultFormat"
+    val loader = Utils.getContextClassLoader()
+
+    Try(loader.loadClass(provider)).orElse(Try(loader.loadClass(provider2))) match {
+      case Success(resolvedClass) =>
+        resolvedClass
+      case Failure(error) =>
+        throw new ClassNotFoundException(s"Failed to locate class for $provider", error)
+    }
+  }
+
+  /** Create format reader from specified provider */
+  def resolveFormat(provider: String): BaseFormat = {
+    lookupFormat(provider).newInstance() match {
+      case resolvedFormat: BaseFormat => resolvedFormat
+      case _ => throw new UnsupportedOperationException(
+        s"Provider $provider does not support BaseFormat interface")
+    }
   }
 }

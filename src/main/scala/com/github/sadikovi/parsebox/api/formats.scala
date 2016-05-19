@@ -36,7 +36,7 @@ import org.apache.spark.sql.SQLContext
  * }}}
  */
 abstract class BaseFormat {
-  def createFormat(
+  def createParser(
       sqlContext: SQLContext,
       paths: Array[String],
       parameters: Map[String, String]): ResolvedParser

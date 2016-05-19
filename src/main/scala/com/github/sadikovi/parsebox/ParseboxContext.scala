@@ -45,7 +45,8 @@ final class ParseboxContext(@transient private val sqlContext: SQLContext) {
 
   /** Resolver provided format and return associated `FormatReader` */
   def format(provider: String): FormatReader = {
-    FormatRegistry.lookupFormat(provider)
+    val customFormat = FormatRegistry.resolveFormat(provider)
+    new FormatReader(customFormat, sqlContext)
   }
 }
 
