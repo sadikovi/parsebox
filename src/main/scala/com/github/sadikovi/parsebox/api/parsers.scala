@@ -47,13 +47,15 @@ abstract class ResolvedParser {
 /**
  * [[ExternalParser]] provides API for custom low-level processing using 3rd party package, e.g.
  * one of the Spark packages, such as JSON, CSV, JDBC, etc. Note that type is defined by provided
- * record type.
+ * record type, and final DataFrame schema should match defined type schema, otherwise exception is
+ * thrown.
  */
-abstract class ExternalParser[T <: RecordType](implicit tag: ClassTag[T]) extends ResolvedParser {
+abstract class ExternalParser[T<:RecordType](implicit tag: ClassTag[T]) extends ResolvedParser {
+
   def create(): DataFrame
 
   final override def dataSchema(): StructType = {
-    val klass = tag.runtimeClass.asInstanceOf[Class[T]]
+    val klass = tag.runtimeClass
     TypeRegistry.lookupSchema(klass).getOrElse(
       sys.error(s"Could not resolve schema for type $klass"))
   }

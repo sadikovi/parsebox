@@ -53,13 +53,16 @@ object TypeRegistry {
   }
 
   /** Since we work with `RecordType` we need to expose API to get data schema */
-  def lookupSchema(klass: Class[_<:RecordType]): Option[StructType] = {
+  def lookupSchema(klass: Class[_]): Option[StructType] = {
     val params: Array[Class[_]] = Array.empty
     try {
-      val constructor = klass.getDeclaredConstructor(params: _*)
+      val constructor = klass.asInstanceOf[Class[RecordType]].getDeclaredConstructor(params: _*)
       val recordType: RecordType = constructor.newInstance()
       Some(recordType.dataSchema)
     } catch {
+      case cc: ClassCastException =>
+        logger.error(s"Failed to cast $klass to RecordType", cc)
+        None
       case nsm: NoSuchMethodException =>
         logger.error(s"Failed to load type $klass, does not provide empty constructor", nsm)
         None
