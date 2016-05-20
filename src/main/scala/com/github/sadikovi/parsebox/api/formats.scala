@@ -16,6 +16,8 @@
 
 package com.github.sadikovi.parsebox.api
 
+import java.util.{Map => JavaMap}
+import scala.collection.JavaConverters._
 import org.apache.spark.sql.SQLContext
 
 /**
@@ -36,8 +38,19 @@ import org.apache.spark.sql.SQLContext
  * }}}
  */
 abstract class BaseFormat {
+  /** Scala friendly method to create parser */
   def createParser(
       sqlContext: SQLContext,
       paths: Array[String],
-      parameters: Map[String, String]): ResolvedParser
+      parameters: Map[String, String]): ResolvedParser = {
+    throw new UnsupportedOperationException("Implement either Scala or Java methods")
+  }
+
+  /** Java API to create parser */
+  def createParser(
+      sqlContext: SQLContext,
+      paths: Array[String],
+      parameters: JavaMap[String, String]): ResolvedParser = {
+    createParser(sqlContext, paths, parameters.asScala.toMap)
+  }
 }

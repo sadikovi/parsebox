@@ -26,7 +26,7 @@ class DefaultFormat extends BaseFormat {
       sqlContext: SQLContext,
       paths: Array[String],
       parameters: Map[String, String]): ResolvedParser = {
-    new ExternalParser[Opt2RecordType] {
+    new ExternalParser(classOf[Opt2RecordType]) {
       override def create(): DataFrame = {
         // We use hack of the first path, since multiple paths for DataFrameReader/Writer are
         // supported since 1.6.0

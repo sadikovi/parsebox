@@ -50,13 +50,11 @@ abstract class ResolvedParser {
  * record type, and final DataFrame schema should match defined type schema, otherwise exception is
  * thrown.
  */
-abstract class ExternalParser[T<:RecordType](implicit tag: ClassTag[T]) extends ResolvedParser {
-
+abstract class ExternalParser(recordType: Class[_<:RecordType]) extends ResolvedParser {
   def create(): DataFrame
 
   final override def dataSchema(): StructType = {
-    val klass = tag.runtimeClass
-    TypeRegistry.lookupSchema(klass).getOrElse(
-      sys.error(s"Could not resolve schema for type $klass"))
+    TypeRegistry.lookupSchema(recordType).getOrElse(
+      sys.error(s"Could not resolve schema for type $recordType"))
   }
 }
