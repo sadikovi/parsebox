@@ -52,14 +52,24 @@ object TypeRegistry {
     }
   }
 
+  /** Clear temporary set of registered classes */
+  def clearTempRegistry(): Unit = {
+    externalTypes.clear()
+  }
+
   /** Since we work with `RecordType` we need to expose API to get data schema */
   def lookupSchema(klass: Class[_]): Option[StructType] = {
     val params: Array[Class[_]] = Array.empty
     try {
-      val constructor = klass.asInstanceOf[Class[RecordType]].getDeclaredConstructor(params: _*)
+      val castClass = klass.asInstanceOf[Class[RecordType]]
+      require(exists(castClass), s"Class $castClass is not registered")
+      val constructor = castClass.getDeclaredConstructor(params: _*)
       val recordType: RecordType = constructor.newInstance()
       Some(recordType.dataSchema)
     } catch {
+      case ia: IllegalArgumentException =>
+        logger.error(s"Failed to get constructor", ia)
+        None
       case cc: ClassCastException =>
         logger.error(s"Failed to cast $klass to RecordType", cc)
         None

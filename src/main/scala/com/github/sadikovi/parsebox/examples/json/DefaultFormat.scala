@@ -14,37 +14,25 @@
  * limitations under the License.
  */
 
-package com.github.sadikovi.parsebox.impl.formats.netflow
+package com.github.sadikovi.parsebox.examples.json
 
 import org.apache.spark.sql.{SQLContext, DataFrame}
 import org.apache.spark.sql.types.{StructType, StructField, StringType}
 import com.github.sadikovi.parsebox.api._
 
-////////////////////////////////////////////////////////////////
-// Default format for NetFlow using low-level ResolvedParser
-////////////////////////////////////////////////////////////////
-
+/** Default format for JSON using low-level ExternalParser */
 class DefaultFormat extends BaseFormat {
   override def createParser(
       sqlContext: SQLContext,
       paths: Array[String],
       parameters: Map[String, String]): ResolvedParser = {
-    new NetFlowParser(sqlContext, paths, parameters)
+    new ExternalParser[Opt2RecordType] {
+      override def create(): DataFrame = {
+        // We use hack of the first path, since multiple paths for DataFrameReader/Writer are
+        // supported since 1.6.0
+        val df = sqlContext.read.options(parameters).json(paths.headOption.getOrElse(""))
+        df.select("opt1", "opt2")
+      }
+    }
   }
-}
-
-class NetFlowParser(
-    @transient val sqlContext: SQLContext,
-    val paths: Array[String],
-    parameters: Map[String, String])
-  extends ResolvedParser {
-
-  override def create(): DataFrame = {
-    sqlContext.read.format("com.github.sadikovi.spark.netflow").option("version", "5").
-      options(parameters).load(paths.headOption.getOrElse("")).select("srcip", "dstip")
-  }
-
-  override def dataSchema(): StructType = StructType(
-    StructField("srcip", StringType, false) ::
-    StructField("dstip", StringType, false) :: Nil)
 }

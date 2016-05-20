@@ -16,8 +16,10 @@
 
 package com.github.sadikovi.testutil
 
-import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.fs.Path
+import java.util.UUID
+
+import org.apache.hadoop.conf.{Configuration => HadoopConf}
+import org.apache.hadoop.fs.{Path => HadoopPath}
 
 import org.apache.spark.sql.DataFrame
 
@@ -66,22 +68,47 @@ trait TestBase {
   }
 
   final protected def mkdirs(path: String): Boolean = {
-    val p = new Path(path)
-    val fs = p.getFileSystem(new Configuration(false))
+    val p = new HadoopPath(path)
+    val fs = p.getFileSystem(new HadoopConf(false))
     fs.mkdirs(p)
   }
 
   /** delete directory / file with path. Recursive must be true for directory */
   final protected def rm(path: String, recursive: Boolean): Boolean = {
-    val p = new Path(path)
-    val fs = p.getFileSystem(new Configuration(false))
+    val p = new HadoopPath(path)
+    val fs = p.getFileSystem(new HadoopConf(false))
     fs.delete(p, recursive)
   }
 
   /** compare two DataFrame objects */
-  final protected def compare(df: DataFrame, expected: DataFrame): Boolean = {
+  final protected def checkAnswer(df: DataFrame, expected: DataFrame): Boolean = {
     val got = df.collect().map(_.toString()).sortWith(_ < _)
     val exp = expected.collect().map(_.toString()).sortWith(_ < _)
     got.sameElements(exp)
+  }
+
+  /** Create temporary directory on local file system */
+  def createTempDir(
+      root: String = System.getProperty("java.io.tmpdir"),
+      namePrefix: String = "netflow"): HadoopPath = {
+    val dir = new HadoopPath(root / namePrefix / UUID.randomUUID().toString)
+    val fs = dir.getFileSystem(new HadoopConf(false))
+    fs.mkdirs(dir)
+    dir
+  }
+
+  /** Execute block of code with temporary hadoop path */
+  private def withTempHadoopPath(path: HadoopPath)(func: HadoopPath => Unit): Unit = {
+    try {
+      func(path)
+    } finally {
+      val fs = path.getFileSystem(new HadoopConf(false))
+      fs.delete(path, true)
+    }
+  }
+
+  /** Execute code block with created temporary directory */
+  def withTempDir(func: HadoopPath => Unit): Unit = {
+    withTempHadoopPath(createTempDir())(func)
   }
 }

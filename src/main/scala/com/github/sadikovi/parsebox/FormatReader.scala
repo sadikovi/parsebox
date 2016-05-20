@@ -34,7 +34,9 @@ case class FormatReader(
   private val extraOptions = new MutableMap[String, String]()
 
   /** Compare both schemas ignoring nullability */
-  private def verifySchemaIgnoreNullability(left: StructType, right: StructType): Boolean = {
+  private[parsebox] def verifySchemaIgnoreNullability(
+      left: StructType,
+      right: StructType): Boolean = {
     left.size == right.size &&
       left.map { field => (field.name, field.dataType) } ==
         right.map { field => (field.name, field.dataType) }
@@ -46,15 +48,22 @@ case class FormatReader(
     this
   }
 
+  /** Get specified options */
+  private[parsebox] def getOptions(): Map[String, String] = extraOptions.toMap
+
+  /** Post-process DataFrame and also apply validation rules */
+  private[parsebox] def processDataFrame(df: DataFrame, expectedSchema: StructType): DataFrame = {
+    require(verifySchemaIgnoreNullability(df.schema, expectedSchema),
+      s"Provided schema $expectedSchema does not match actual schema ${df.schema}")
+    // return DataFrame after validating schema
+    df
+  }
+
   /** Load DataFrame using provided format with paths and options */
   def load(paths: Array[String]): DataFrame = {
     val parser: ResolvedParser = format.createParser(sqlContext, paths, extraOptions.toMap)
     val df = parser.create()
-    val providedSchema = parser.dataSchema()
-    require(verifySchemaIgnoreNullability(df.schema, providedSchema),
-      s"Provided schema $providedSchema does not match actual schema ${df.schema}")
-    // return DataFrame after validating schema
-    df
+    processDataFrame(df, parser.dataSchema())
   }
 
   /** Load DataFrame using provided format, without any file system path (for Cassandra) */
