@@ -23,6 +23,7 @@ import org.apache.spark.sql.types.{StructType, StructField, StringType}
 import com.github.sadikovi.parsebox.examples.csv.{DefaultFormat => CsvFormat}
 import com.github.sadikovi.parsebox.examples.fail.{DefaultFormat => FailFormat}
 import com.github.sadikovi.parsebox.examples.json.{DefaultFormat => JsonFormat}
+import com.github.sadikovi.parsebox.examples.splunk.{DefaultFormat => SplunkFormat}
 import com.github.sadikovi.testutil.{UnitTestSpec, SparkLocal}
 import com.github.sadikovi.testutil.implicits._
 
@@ -30,8 +31,10 @@ import com.github.sadikovi.testutil.implicits._
 class ApiSuite extends UnitTestSpec with SparkLocal {
   // define global Spark SQL context
   var sqlContext: SQLContext = null
+  // resources for testing API
   val jsonPath = testDirectory / "resources" / "json" / "options.json"
   val csvPath = testDirectory / "resources" / "csv" / "options.csv"
+  val splunkPath = testDirectory / "resources" / "splunk" / "sample.txt"
 
   override def beforeAll(configMap: ConfigMap) {
     startSparkContext()
@@ -44,17 +47,57 @@ class ApiSuite extends UnitTestSpec with SparkLocal {
   }
 
   test("check Opt1RecordType") {
-    val opt1 = new Opt1RecordType("test")
-    val rdd = sc.parallelize(Seq(opt1.toRow))
-    val df = sqlContext.createDataFrame(rdd, opt1.dataSchema)
+    val opt = new Opt1RecordType("test")
+    val rdd = sc.parallelize(Seq(opt.toRow))
+    val df = sqlContext.createDataFrame(rdd, opt.dataSchema)
     df.count should be (1)
   }
 
+  test("check Opt1RecordType setters") {
+    val opt = new Opt1RecordType()
+    opt.setKey("test")
+    opt.key should be ("test")
+  }
+
+  test("check Opt1RecordType hashCode") {
+    val opt1 = new Opt1RecordType()
+    val opt2 = new Opt1RecordType()
+    opt1.hashCode() should be (opt2.hashCode())
+    // set different key values and compare hash codes
+    opt1.setKey("a")
+    opt2.setKey("b")
+    opt1.hashCode() shouldNot be (opt2.hashCode())
+  }
+
   test("check Opt2RecordType") {
-    val opt2 = new Opt2RecordType("test1", "test2")
-    val rdd = sc.parallelize(Seq(opt2.toRow))
-    val df = sqlContext.createDataFrame(rdd, opt2.dataSchema)
+    val opt = new Opt2RecordType("test1", "test2")
+    val rdd = sc.parallelize(Seq(opt.toRow))
+    val df = sqlContext.createDataFrame(rdd, opt.dataSchema)
     df.count should be (1)
+  }
+
+  test("check Opt2RecordType setters") {
+    val opt = new Opt2RecordType()
+    opt.setKey1("a")
+    opt.setKey2("b")
+    opt.key1 should be ("a")
+    opt.key2 should be ("b")
+  }
+
+  test("check Opt2RecordType hashCode") {
+    val opt1 = new Opt2RecordType()
+    val opt2 = new Opt2RecordType()
+    opt1.hashCode() should be (opt2.hashCode())
+    // set different key1
+    opt1.setKey1("a")
+    opt2.setKey1("b")
+    opt1.hashCode() shouldNot be (opt2.hashCode())
+    // set different key2, but same key1
+    opt1.setKey1("1")
+    opt1.setKey2("a")
+    opt2.setKey1("1")
+    opt2.setKey1("b")
+    opt1.hashCode() shouldNot be (opt2.hashCode())
   }
 
   test("override create method for BaseFormat") {
@@ -142,5 +185,20 @@ class ApiSuite extends UnitTestSpec with SparkLocal {
     val csv = new FailFormat()
     val df = csv.create(sqlContext, Array(csvPath), Map.empty[String, String])
     df.count() should be (0)
+  }
+
+  test("read sample file using default format with custom delimiter") {
+    val t = sqlContext
+    import t.implicits._
+    val csv = new SplunkFormat()
+    val df = csv.create(sqlContext, Array(splunkPath), Map.empty[String, String])
+    checkAnswer(df, Seq(
+      ("999", "4624"),
+      ("1001", "4625"),
+      ("1003", "4624"),
+      ("1004", "4624"),
+      ("1006", "4625"),
+      ("1007", "4625"),
+      ("1010", "4624")).toDF("opt1", "opt2"))
   }
 }

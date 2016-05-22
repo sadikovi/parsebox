@@ -67,7 +67,7 @@ class Opt1RecordType(var key: String) extends RecordType {
 
   override def hashCode(): Int = {
     var result: Int = 1
-    result = 31 * result + key.hashCode()
+    result = 31 * result + (if (key == null) 0 else key.hashCode())
     result
   }
 
@@ -93,8 +93,8 @@ class Opt2RecordType(var key1: String, var key2: String) extends RecordType {
 
   override def hashCode(): Int = {
     var result: Int = 1
-    result = 31 * result + key1.hashCode()
-    result = 31 * result + key2.hashCode()
+    result = 31 * result + (if (key1 == null) 0 else key1.hashCode())
+    result = 31 * result + (if (key2 == null) 0 else key2.hashCode())
     result
   }
 

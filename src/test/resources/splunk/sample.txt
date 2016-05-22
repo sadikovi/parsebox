@@ -1,0 +1,353 @@
+04/29/2014 00:00:59 AM
+LogName=Security
+SourceName=Microsoft Windows security auditing.
+EventCode=4624
+EventType=0
+Type=Information
+ComputerName=sacreblue
+TaskCategory=Ouverture de session spéciale
+OpCode=Informations
+RecordNumber=999
+Keywords=Succès de l’audit
+
+04/29/2014 00:00:00 AM
+LogName=Security
+SourceName=Microsoft Windows security auditing.
+EventCode=4672
+EventType=0
+Type=Information
+ComputerName=sacreblue
+TaskCategory=Ouverture de session spéciale
+OpCode=Informations
+RecordNumber=1000
+Keywords=Succès de l’audit
+Message=Privilèges spéciaux attribués à la nouvelle ouverture de session.
+
+Sujet :
+               ID de sécurité :                  AUTORITE NT\Système
+               Nom du compte :                            Système
+               Domaine du compte :                     AUTORITE NT
+               ID d’ouverture de session :                           0x3e7
+
+Privilèges :                          SeAssignPrimaryTokenPrivilege
+                                             SeTcbPrivilege
+                                             SeSecurityPrivilege
+                                             SeTakeOwnershipPrivilege
+                                             SeLoadDriverPrivilege
+                                             SeBackupPrivilege
+                                             SeRestorePrivilege
+                                             SeDebugPrivilege
+                                             SeAuditPrivilege
+                                             SeSystemEnvironmentPrivilege
+                                             SeImpersonatePrivilege
+
+04/29/2014 00:00:01 AM
+LogName=Security
+SourceName=Microsoft Windows security auditing.
+EventCode=4625
+EventType=0
+Type=Information
+ComputerName=sacreblue
+TaskCategory=Ouverture de session spéciale
+OpCode=Informations
+RecordNumber=1001
+Keywords=Succès de l’audit
+Message=Privilèges spéciaux attribués à la nouvelle ouverture de session.
+
+Sujet :
+    ID de sécurité :                  AUTORITE NT\Système
+    Nom du compte :                            Système
+    Domaine du compte :                     AUTORITE NT
+    ID d’ouverture de session :                           0x3e7
+
+Privilèges :                          SeAssignPrimaryTokenPrivilege
+                                  SeTcbPrivilege
+                                  SeSecurityPrivilege
+                                  SeTakeOwnershipPrivilege
+                                  SeLoadDriverPrivilege
+                                  SeBackupPrivilege
+                                  SeRestorePrivilege
+                                  SeDebugPrivilege
+                                  SeAuditPrivilege
+                                  SeSystemEnvironmentPrivilege
+                                  SeImpersonatePrivilege
+
+
+04/29/2014 00:00:02 AM
+LogName=Security
+SourceName=Microsoft Windows security auditing.
+EventCode=4775
+EventType=0
+Type=Information
+ComputerName=sacreblue
+TaskCategory=Ouverture de session spéciale
+OpCode=Informations
+RecordNumber=1002
+Keywords=Succès de l’audit
+Message=Privilèges spéciaux attribués à la nouvelle ouverture de session.
+
+Sujet :
+    ID de sécurité :                  AUTORITE NT\Système
+    Nom du compte :                            Système
+    Domaine du compte :                     AUTORITE NT
+    ID d’ouverture de session :                           0x3e7
+
+Privilèges :                          SeAssignPrimaryTokenPrivilege
+                                  SeTcbPrivilege
+                                  SeSecurityPrivilege
+                                  SeTakeOwnershipPrivilege
+                                  SeLoadDriverPrivilege
+                                  SeBackupPrivilege
+                                  SeRestorePrivilege
+                                  SeDebugPrivilege
+                                  SeAuditPrivilege
+                                  SeSystemEnvironmentPrivilege
+                                  SeImpersonatePrivilege
+
+04/29/2014 00:00:03 AM
+LogName=Security
+SourceName=Microsoft Windows security auditing.
+EventCode=4624
+EventType=0
+Type=Information
+ComputerName=sacreblue
+TaskCategory=Ouverture de session spéciale
+OpCode=Informations
+RecordNumber=1003
+Keywords=Succès de l’audit
+Message=Privilèges spéciaux attribués à la nouvelle ouverture de session.
+
+Sujet :
+    ID de sécurité :                  AUTORITE NT\Système
+    Nom du compte :                            Système
+    Domaine du compte :                     AUTORITE NT
+    ID d’ouverture de session :                           0x3e7
+
+Privilèges :                          SeAssignPrimaryTokenPrivilege
+                                  SeTcbPrivilege
+                                  SeSecurityPrivilege
+                                  SeTakeOwnershipPrivilege
+                                  SeLoadDriverPrivilege
+                                  SeBackupPrivilege
+                                  SeRestorePrivilege
+                                  SeDebugPrivilege
+                                  SeAuditPrivilege
+                                  SeSystemEnvironmentPrivilege
+                                  SeImpersonatePrivilege
+
+04/29/2014 00:00:04 AM
+LogName=Security
+SourceName=Microsoft Windows security auditing.
+EventCode=4624
+EventType=0
+Type=Information
+ComputerName=sacreblue
+TaskCategory=Ouverture de session spéciale
+OpCode=Informations
+RecordNumber=1004
+Keywords=Succès de l’audit
+Message=Privilèges spéciaux attribués à la nouvelle ouverture de session.
+
+Sujet :
+    ID de sécurité :                  AUTORITE NT\Système
+    Nom du compte :                            Système
+    Domaine du compte :                     AUTORITE NT
+    ID d’ouverture de session :                           0x3e7
+
+Privilèges :                          SeAssignPrimaryTokenPrivilege
+                                  SeTcbPrivilege
+                                  SeSecurityPrivilege
+                                  SeTakeOwnershipPrivilege
+                                  SeLoadDriverPrivilege
+                                  SeBackupPrivilege
+                                  SeRestorePrivilege
+                                  SeDebugPrivilege
+                                  SeAuditPrivilege
+                                  SeSystemEnvironmentPrivilege
+                                  SeImpersonatePrivilege
+
+04/29/2014 00:00:05 AM
+LogName=Security
+SourceName=Microsoft Windows security auditing.
+EventCode=4776
+EventType=0
+Type=Information
+ComputerName=sacreblue
+TaskCategory=Ouverture de session spéciale
+OpCode=Informations
+RecordNumber=1005
+Keywords=Succès de l’audit
+Message=Privilèges spéciaux attribués à la nouvelle ouverture de session.
+
+Sujet :
+    ID de sécurité :                  AUTORITE NT\Système
+    Nom du compte :                            Système
+    Domaine du compte :                     AUTORITE NT
+    ID d’ouverture de session :                           0x3e7
+
+Privilèges :                          SeAssignPrimaryTokenPrivilege
+                                  SeTcbPrivilege
+                                  SeSecurityPrivilege
+                                  SeTakeOwnershipPrivilege
+                                  SeLoadDriverPrivilege
+                                  SeBackupPrivilege
+                                  SeRestorePrivilege
+                                  SeDebugPrivilege
+                                  SeAuditPrivilege
+                                  SeSystemEnvironmentPrivilege
+                                  SeImpersonatePrivilege
+
+04/29/2014 00:00:06 AM
+LogName=Security
+SourceName=Microsoft Windows security auditing.
+EventCode=4625
+EventType=0
+Type=Information
+ComputerName=sacreblue
+TaskCategory=Ouverture de session spéciale
+OpCode=Informations
+RecordNumber=1006
+Keywords=Succès de l’audit
+Message=Privilèges spéciaux attribués à la nouvelle ouverture de session.
+
+Sujet :
+    ID de sécurité :                  AUTORITE NT\Système
+    Nom du compte :                            Système
+    Domaine du compte :                     AUTORITE NT
+    ID d’ouverture de session :                           0x3e7
+
+Privilèges :                          SeAssignPrimaryTokenPrivilege
+                                  SeTcbPrivilege
+                                  SeSecurityPrivilege
+                                  SeTakeOwnershipPrivilege
+                                  SeLoadDriverPrivilege
+                                  SeBackupPrivilege
+                                  SeRestorePrivilege
+                                  SeDebugPrivilege
+                                  SeAuditPrivilege
+                                  SeSystemEnvironmentPrivilege
+                                  SeImpersonatePrivilege
+
+04/29/2014 00:00:07 AM
+LogName=Security
+SourceName=Microsoft Windows security auditing.
+EventCode=4625
+EventType=0
+Type=Information
+ComputerName=sacreblue
+TaskCategory=Ouverture de session spéciale
+OpCode=Informations
+RecordNumber=1007
+Keywords=Succès de l’audit
+Message=Privilèges spéciaux attribués à la nouvelle ouverture de session.
+
+Sujet :
+    ID de sécurité :                  AUTORITE NT\Système
+    Nom du compte :                            Système
+    Domaine du compte :                     AUTORITE NT
+    ID d’ouverture de session :                           0x3e7
+
+Privilèges :                          SeAssignPrimaryTokenPrivilege
+                                  SeTcbPrivilege
+                                  SeSecurityPrivilege
+                                  SeTakeOwnershipPrivilege
+                                  SeLoadDriverPrivilege
+                                  SeBackupPrivilege
+                                  SeRestorePrivilege
+                                  SeDebugPrivilege
+                                  SeAuditPrivilege
+                                  SeSystemEnvironmentPrivilege
+                                  SeImpersonatePrivilege
+
+04/29/2014 00:00:08 AM
+LogName=Security
+SourceName=Microsoft Windows security auditing.
+EventCode=4380
+EventType=0
+Type=Information
+ComputerName=sacreblue
+TaskCategory=Ouverture de session spéciale
+OpCode=Informations
+RecordNumber=1008
+Keywords=Succès de l’audit
+Message=Privilèges spéciaux attribués à la nouvelle ouverture de session.
+
+Sujet :
+    ID de sécurité :                  AUTORITE NT\Système
+    Nom du compte :                            Système
+    Domaine du compte :                     AUTORITE NT
+    ID d’ouverture de session :                           0x3e7
+
+Privilèges :                          SeAssignPrimaryTokenPrivilege
+                                  SeTcbPrivilege
+                                  SeSecurityPrivilege
+                                  SeTakeOwnershipPrivilege
+                                  SeLoadDriverPrivilege
+                                  SeBackupPrivilege
+                                  SeRestorePrivilege
+                                  SeDebugPrivilege
+                                  SeAuditPrivilege
+                                  SeSystemEnvironmentPrivilege
+                                  SeImpersonatePrivilege
+
+04/29/2014 00:00:09 AM
+LogName=Security
+SourceName=Microsoft Windows security auditing.
+EventCode=4380
+EventType=0
+Type=Information
+ComputerName=sacreblue
+TaskCategory=Ouverture de session spéciale
+OpCode=Informations
+RecordNumber=1009
+Keywords=Succès de l’audit
+Message=Privilèges spéciaux attribués à la nouvelle ouverture de session.
+
+Sujet :
+    ID de sécurité :                  AUTORITE NT\Système
+    Nom du compte :                            Système
+    Domaine du compte :                     AUTORITE NT
+    ID d’ouverture de session :                           0x3e7
+
+Privilèges :                          SeAssignPrimaryTokenPrivilege
+                                  SeTcbPrivilege
+                                  SeSecurityPrivilege
+                                  SeTakeOwnershipPrivilege
+                                  SeLoadDriverPrivilege
+                                  SeBackupPrivilege
+                                  SeRestorePrivilege
+                                  SeDebugPrivilege
+                                  SeAuditPrivilege
+                                  SeSystemEnvironmentPrivilege
+                                  SeImpersonatePrivilege
+
+04/29/2014 00:00:10 AM
+LogName=Security
+SourceName=Microsoft Windows security auditing.
+EventCode=4624
+EventType=0
+Type=Information
+ComputerName=sacreblue
+TaskCategory=Ouverture de session spéciale
+OpCode=Informations
+RecordNumber=1010
+Keywords=Succès de l’audit
+Message=Privilèges spéciaux attribués à la nouvelle ouverture de session.
+
+Sujet :
+    ID de sécurité :                  AUTORITE NT\Système
+    Nom du compte :                            Système
+    Domaine du compte :                     AUTORITE NT
+    ID d’ouverture de session :                           0x3e7
+
+Privilèges :                          SeAssignPrimaryTokenPrivilege
+                                  SeTcbPrivilege
+                                  SeSecurityPrivilege
+                                  SeTakeOwnershipPrivilege
+                                  SeLoadDriverPrivilege
+                                  SeBackupPrivilege
+                                  SeRestorePrivilege
+                                  SeDebugPrivilege
+                                  SeAuditPrivilege
+                                  SeSystemEnvironmentPrivilege
+                                  SeImpersonatePrivilege

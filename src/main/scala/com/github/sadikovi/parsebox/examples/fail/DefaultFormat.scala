@@ -18,6 +18,7 @@ package com.github.sadikovi.parsebox.examples.fail
 
 import com.github.sadikovi.parsebox.api._
 
+/** Example of [[DefaultFormat]] with overwritten failure processing */
 class DefaultFormat extends HadoopFormat[Opt2RecordType] {
   override def recordClass(): Class[Opt2RecordType] = classOf[Opt2RecordType]
 

@@ -14,19 +14,31 @@
  * limitations under the License.
  */
 
-package com.github.sadikovi.parsebox.examples.csv
+package com.github.sadikovi.parsebox.examples.splunk
 
 import com.github.sadikovi.parsebox.api._
 
-/** [[DefaultFormat]] to process comma-separated values with default delimiter */
+/** [[DefaultFormat]] to process file with custom delimiter */
 class DefaultFormat extends HadoopFormat[Opt2RecordType] {
   override def recordClass(): Class[Opt2RecordType] = classOf[Opt2RecordType]
 
-  override def filter(rawValue: String): Boolean = rawValue.startsWith("option1-0")
+  override def filter(rawValue: String): Boolean = {
+    rawValue.contains("EventCode=4624") || rawValue.contains("EventCode=4625")
+  }
+
+  override def delimiter(): String = "LogName=Security"
 
   override def process(rawValue: String, record: Opt2RecordType): Unit = {
-    val arr = rawValue.split(',')
-    record.key1 = arr(0)
-    record.key2 = arr(1)
+    val arr = rawValue.split('\n').flatMap { each =>
+      val keyValue = each.split('=')
+      if (keyValue.length == 2) {
+        Seq(keyValue(0) -> keyValue(1))
+      } else {
+        Seq.empty
+      }
+    }.toMap
+
+    record.key1 = arr("RecordNumber")
+    record.key2 = arr("EventCode")
   }
 }
