@@ -24,6 +24,8 @@ import org.apache.spark.sql.types.{StructType, StructField, StringType, IntegerT
  * and provide empty constructor (to resolve data schema), and provide setters for values (or be
  * mutable), so they can reused by Hadoop InputFormat. It is also recommended to overwrite
  * `hashCode` function to efficiency.
+ * Since no-args constructor is required, there is no need to provide constructor with parameters,
+ * just different setters is already enough for mutable type.
  */
 abstract class RecordType {
   /**
@@ -57,7 +59,17 @@ abstract class RecordType {
 class Opt1RecordType(var key: String) extends RecordType {
   def this() = this(null)
 
+  def setKey(value: String): Unit = {
+    key = value
+  }
+
   override def toRow(): Row = Row(key)
+
+  override def hashCode(): Int = {
+    var result: Int = 1
+    result = 31 * result + key.hashCode()
+    result
+  }
 
   override def dataSchema(): StructType = StructType(
     StructField("opt1", StringType, true) :: Nil)
@@ -70,6 +82,21 @@ class Opt1RecordType(var key: String) extends RecordType {
  */
 class Opt2RecordType(var key1: String, var key2: String) extends RecordType {
   def this() = this(null, null)
+
+  def setKey1(value: String): Unit = {
+    key1 = value
+  }
+
+  def setKey2(value: String): Unit = {
+    key2 = value
+  }
+
+  override def hashCode(): Int = {
+    var result: Int = 1
+    result = 31 * result + key1.hashCode()
+    result = 31 * result + key2.hashCode()
+    result
+  }
 
   override def toRow(): Row = Row(key1, key2)
 

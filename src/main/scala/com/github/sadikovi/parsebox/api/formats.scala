@@ -53,7 +53,7 @@ trait BaseFormat {
       paths: Array[String],
       parameters: Map[String, String]): DataFrame = {
     throw new UnsupportedOperationException(
-      "Implement either Scala or Java methods 'create(sqlContext, paths, parameters)'")
+      "Must implement either Scala or Java methods 'create(sqlContext, paths, parameters)'")
   }
 
   def create(

@@ -47,4 +47,29 @@ public class JavaApiSuite {
     assertEquals(ep.dataSchema(), new Opt2RecordType().dataSchema());
     assertEquals(ep.create(null, null, new HashMap<String, String>()), null);
   }
+
+  @Test
+  public void testHadoopFormat() {
+    HadoopFormat<Opt2RecordType> hf = new HadoopFormat<Opt2RecordType>() {
+      @Override
+      public Class<Opt2RecordType> recordClass() {
+        return Opt2RecordType.class;
+      }
+
+      @Override
+      public boolean filter(String rawValue) {
+        return rawValue.startsWith("option1-0");
+      }
+
+      @Override
+      public void process(String rawValue, Opt2RecordType record) {
+        String[] arr = rawValue.split(",", 2);
+        record.setKey1(arr[0]);
+        record.setKey2(arr[1]);
+      }
+    };
+    assertEquals(hf.dataSchema(), new Opt2RecordType().dataSchema());
+    assertEquals(hf.delimiter(), null);
+    assertEquals(hf.isSplittable(null, null), false);
+  }
 }
