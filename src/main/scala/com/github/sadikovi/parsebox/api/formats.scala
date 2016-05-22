@@ -91,6 +91,17 @@ trait TypedFormat[T<:RecordType] extends BaseFormat {
  */
 abstract class ExternalFormat[T<:RecordType] extends TypedFormat[T]
 
+/**
+ * [[HadoopFormat]] provides API for custom file-based parser. Hadoop `InputFormat` resolves file
+ * types and compression codecs automatically, so one needs to just implement record processing.
+ * Note that type is supposed to be mutable, so each processing is just filling up type properties.
+ * By default files are non-splittable, this behaviour can be overwritten, but underlying
+ * implementation will still check if it is possible to split file.
+ * Delimiter, by default, is null, which forces usage of `\n` new line separator, though any UTF-8
+ * string can be used as a delimiter (long delimiters might affect performance).
+ * Filtering results in function call for every string regardless of actual implementation, it is
+ * not recommended to use regular expressions, unless they are defined globally.
+ */
 abstract class HadoopFormat[T<:RecordType]
     extends NewFileInputFormat[T, NullWritable] with TypedFormat[T] {
 
