@@ -53,7 +53,7 @@ Hadoop `InputFormat`.
 In order to use created custom type, you can add it to Parsebox's `TypeRegistry` code directly with
 optional short name, or use `TypeRegistry.register()` to register custom type at runtime.
 
-### Creating new formats
+#### Creating new formats
 To create custom format to provide parsing logic, you need to subclass one of the API classes from
 `formats.scala` with concrete implementation of some of the methods. It is recommended to follow
 the convention of creating `DefaultFormat` subclass, this allows to provide only package name to
