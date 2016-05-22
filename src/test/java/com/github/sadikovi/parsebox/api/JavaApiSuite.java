@@ -25,33 +25,26 @@ import static org.junit.Assert.assertEquals;
 
 import org.apache.spark.sql.DataFrame;
 import org.apache.spark.sql.SQLContext;
+import org.apache.spark.sql.types.StructType;
 
 /** Testing of Java API for Parsebox */
 public class JavaApiSuite {
 
   @Test
-  public void testExternalParser() {
-    ExternalParser ep = new ExternalParser(Opt2RecordType.class) {
+  public void testExternalFormat() {
+    ExternalFormat<Opt2RecordType> ep = new ExternalFormat<Opt2RecordType>() {
       @Override
-      public DataFrame create() {
+      public Class<Opt2RecordType> recordClass() {
+        return Opt2RecordType.class;
+      }
+
+      @Override
+      public DataFrame create(
+          SQLContext sqlContext, String[] paths, Map<String, String> parameters) {
         return null;
       }
     };
     assertEquals(ep.dataSchema(), new Opt2RecordType().dataSchema());
-  }
-
-  @Test
-  public void testBaseFormat() {
-    BaseFormat bf = new BaseFormat() {
-      @Override
-      public ResolvedParser createParser(
-          SQLContext sqlContext,
-          String[] paths,
-          Map<String, String> parameters) {
-        return null;
-      }
-    };
-
-    assertEquals(bf.createParser(null, null, new HashMap<String, String>()), null);
+    assertEquals(ep.create(null, null, new HashMap<String, String>()), null);
   }
 }

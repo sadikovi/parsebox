@@ -22,7 +22,8 @@ import org.apache.spark.sql.types.{StructType, StructField, StringType, IntegerT
 /**
  * Abstract [[RecordType]] type for supported records. Subclasses should overwrite methods below,
  * and provide empty constructor (to resolve data schema), and provide setters for values (or be
- * mutable), so they can reused by Hadoop InputFormat.
+ * mutable), so they can reused by Hadoop InputFormat. It is also recommended to overwrite
+ * `hashCode` function to efficiency.
  */
 abstract class RecordType {
   /**

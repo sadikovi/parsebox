@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-package com.github.sadikovi.parsebox.examples.json
+package com.github.sadikovi.parsebox.examples.csv
 
-import org.apache.spark.sql.{SQLContext, DataFrame}
-import org.apache.spark.sql.types.{StructType, StructField, StringType}
 import com.github.sadikovi.parsebox.api._
 
-/** Default format for JSON using low-level ExternalFormat */
-class DefaultFormat extends ExternalFormat[Opt2RecordType] {
+class DefaultFormat extends HadoopFormat[Opt2RecordType] {
   override def recordClass(): Class[Opt2RecordType] = classOf[Opt2RecordType]
 
-  override def create(
-      sqlContext: SQLContext,
-      paths: Array[String],
-      parameters: Map[String, String]): DataFrame = {
-    // We use hack of the first path, since multiple paths for DataFrameReader/Writer are
-    // supported since 1.6.0
-    val df = sqlContext.read.options(parameters).json(paths.headOption.getOrElse(""))
-    df.select("opt1", "opt2")
+  override def filter(rawValue: String): Boolean = rawValue.startsWith("option1-0")
+
+  override def process(rawValue: String, record: Opt2RecordType): Unit = {
+    val arr = rawValue.split(',')
+    record.key1 = arr(0)
+    record.key2 = arr(1)
   }
 }

@@ -21,10 +21,10 @@ import scala.collection.mutable.{HashMap => MutableMap}
 import org.apache.spark.sql.{SQLContext, DataFrame}
 import org.apache.spark.sql.types.StructType
 
-import com.github.sadikovi.parsebox.api.{BaseFormat, ResolvedParser}
+import com.github.sadikovi.parsebox.api.BaseFormat
 
 /**
- * [[FormatReader]] interface transforms [[BaseFormat]] and [[ResolvedParser]] into DataFrame with
+ * [[FormatReader]] interface transforms [[BaseFormat]] into DataFrame with
  * additional parsing options.
  */
 case class FormatReader(
@@ -61,9 +61,8 @@ case class FormatReader(
 
   /** Load DataFrame using provided format with paths and options */
   def load(paths: Array[String]): DataFrame = {
-    val parser: ResolvedParser = format.createParser(sqlContext, paths, extraOptions.toMap)
-    val df = parser.create()
-    processDataFrame(df, parser.dataSchema())
+    val df = format.create(sqlContext, paths, extraOptions.toMap)
+    processDataFrame(df, format.dataSchema())
   }
 
   /** Load DataFrame using provided format, without any file system path (for Cassandra) */

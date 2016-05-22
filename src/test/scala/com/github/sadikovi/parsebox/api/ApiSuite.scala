@@ -51,15 +51,23 @@ class ApiSuite extends UnitTestSpec with SparkLocal {
   }
 
   test("check ExternalParser schema") {
-    val ep = new ExternalParser(classOf[Opt2RecordType]) {
-      override def create(): DataFrame = null
+    val ep = new ExternalFormat[Opt2RecordType] {
+      override def recordClass(): Class[Opt2RecordType] = classOf[Opt2RecordType]
+      override def create(
+          sqlContext: SQLContext,
+          paths: Array[String],
+          parameters: Map[String, String]): DataFrame = null
     }
     ep.dataSchema should be (new Opt2RecordType().dataSchema)
   }
 
   test("check metrics implementation for parsers") {
-    val ep = new ExternalParser(classOf[Opt2RecordType]) {
-      override def create(): DataFrame = null
+    val ep = new ExternalFormat[Opt2RecordType] {
+      override def recordClass(): Class[Opt2RecordType] = classOf[Opt2RecordType]
+      override def create(
+          sqlContext: SQLContext,
+          paths: Array[String],
+          parameters: Map[String, String]): DataFrame = null
     }
 
     intercept[UnsupportedOperationException] {
