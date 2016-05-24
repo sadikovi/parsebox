@@ -21,7 +21,7 @@ import java.util.UUID
 import org.apache.hadoop.conf.{Configuration => HadoopConf}
 import org.apache.hadoop.fs.{Path => HadoopPath}
 
-import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.{DataFrame, Row}
 
 import com.github.sadikovi.testutil.implicits._
 
@@ -81,10 +81,16 @@ trait TestBase {
   }
 
   /** compare two DataFrame objects */
-  final protected def checkAnswer(df: DataFrame, expected: DataFrame): Boolean = {
+  final protected def checkAnswer(df: DataFrame, expected: DataFrame): Unit = {
     val got = df.collect().map(_.toString()).sortWith(_ < _)
     val exp = expected.collect().map(_.toString()).sortWith(_ < _)
-    got.sameElements(exp)
+    assert(got.sameElements(exp), s"Failed to compare DataFrame ${got.mkString("[", ", ", "]")} " +
+      s"with expected input ${exp.mkString("[", ", ", "]")}")
+  }
+
+  final protected def checkAnswer(df: DataFrame, expected: Seq[Row]): Unit = {
+    val sc = df.sqlContext.sparkContext
+    checkAnswer(df, df.sqlContext.createDataFrame(sc.parallelize(expected), df.schema))
   }
 
   /** Create temporary directory on local file system */

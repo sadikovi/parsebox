@@ -20,6 +20,7 @@ import java.util.{Map => JavaMap}
 
 import scala.collection.JavaConverters._
 
+import org.apache.hadoop.conf.{Configuration => HadoopConfiguration}
 import org.apache.hadoop.fs.{Path => HadoopPath}
 import org.apache.hadoop.io.NullWritable
 import org.apache.hadoop.io.compress.{CompressionCodecFactory, SplittableCompressionCodec}
@@ -32,6 +33,7 @@ import org.apache.spark.sql.{DataFrame, SQLContext}
 import org.apache.spark.sql.types.StructType
 
 import com.github.sadikovi.parsebox.sources.{Metrics, TypeRegistry, FilteredLineReader}
+import com.github.sadikovi.parsebox.sources.zip.ZipCodec
 
 /**
  * [[BaseFormat]] interface to provide generic methods to process data and collect metrics.
@@ -154,6 +156,13 @@ abstract class HadoopFormat[T<:RecordType]
     getClass().asInstanceOf[Class[HadoopFormat[T]]]
   }
 
+  /** Load internal compression codecs */
+  private def loadCompressionCodecs(conf: HadoopConfiguration): Unit = {
+    val codecs = new java.util.ArrayList[Class[_]]()
+    codecs.add(classOf[ZipCodec])
+    CompressionCodecFactory.setCodecClasses(conf, codecs)
+  }
+
   override final def create(
       sqlContext: SQLContext,
       paths: Array[String],
@@ -164,6 +173,7 @@ abstract class HadoopFormat[T<:RecordType]
     val hadoopPaths = paths.map { each => new HadoopPath(each) }
     NewFileInputFormat.setInputPaths(job, hadoopPaths: _*)
     val updatedConf = SparkHadoopUtil.get.getConfigurationFromJobContext(job)
+    loadCompressionCodecs(updatedConf)
     // Create RDD of row copies (potentially double copy) of internal input format
     val rdd = sparkContext.newAPIHadoopRDD(updatedConf,
       inputFormatClass(),

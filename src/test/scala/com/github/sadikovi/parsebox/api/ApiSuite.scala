@@ -24,6 +24,7 @@ import com.github.sadikovi.parsebox.examples.csv.{DefaultFormat => CsvFormat}
 import com.github.sadikovi.parsebox.examples.fail.{DefaultFormat => FailFormat}
 import com.github.sadikovi.parsebox.examples.json.{DefaultFormat => JsonFormat}
 import com.github.sadikovi.parsebox.examples.splunk.{DefaultFormat => SplunkFormat}
+import com.github.sadikovi.parsebox.examples.zip.{DefaultFormat => ZipFormat}
 import com.github.sadikovi.testutil.{UnitTestSpec, SparkLocal}
 import com.github.sadikovi.testutil.implicits._
 
@@ -35,6 +36,8 @@ class ApiSuite extends UnitTestSpec with SparkLocal {
   val jsonPath = testDirectory / "resources" / "json" / "options.json"
   val csvPath = testDirectory / "resources" / "csv" / "options.csv"
   val splunkPath = testDirectory / "resources" / "splunk" / "sample.txt"
+  val zipSinglePath = testDirectory / "resources" / "zip" / "single.zip"
+  val zipMultiPath = testDirectory / "resources" / "zip" / "multi.zip"
 
   override def beforeAll(configMap: ConfigMap) {
     startSparkContext()
@@ -167,6 +170,10 @@ class ApiSuite extends UnitTestSpec with SparkLocal {
     }
   }
 
+  //////////////////////////////////////////////////////////////
+  // Test default formats
+  //////////////////////////////////////////////////////////////
+
   test("read json file using example default format") {
     val json = new JsonFormat()
     val df = json.create(sqlContext, Array(jsonPath), Map.empty[String, String])
@@ -174,11 +181,9 @@ class ApiSuite extends UnitTestSpec with SparkLocal {
   }
 
   test("read csv file using example default format") {
-    val t = sqlContext
-    import t.implicits._
     val csv = new CsvFormat()
     val df = csv.create(sqlContext, Array(csvPath), Map.empty[String, String])
-    checkAnswer(df, Seq(("option1-0", "option2-0")).toDF("opt1", "opt2"))
+    checkAnswer(df, Row("option1-0", "option2-0") :: Nil)
   }
 
   test("correctly read failed records for csv file") {
@@ -189,16 +194,46 @@ class ApiSuite extends UnitTestSpec with SparkLocal {
 
   test("read sample file using default format with custom delimiter") {
     val t = sqlContext
-    import t.implicits._
-    val csv = new SplunkFormat()
-    val df = csv.create(sqlContext, Array(splunkPath), Map.empty[String, String])
-    checkAnswer(df, Seq(
-      ("999", "4624"),
-      ("1001", "4625"),
-      ("1003", "4624"),
-      ("1004", "4624"),
-      ("1006", "4625"),
-      ("1007", "4625"),
-      ("1010", "4624")).toDF("opt1", "opt2"))
+    val splunk = new SplunkFormat()
+    val df = splunk.create(sqlContext, Array(splunkPath), Map.empty[String, String])
+    checkAnswer(df,
+      Row("999", "4624") ::
+      Row("1001", "4625") ::
+      Row("1003", "4624") ::
+      Row("1004", "4624") ::
+      Row("1006", "4625") ::
+      Row("1007", "4625") ::
+      Row("1010", "4624") :: Nil)
+  }
+
+  test("read zip file with single entry") {
+    val zip = new ZipFormat()
+    val df = zip.create(sqlContext, Array(zipSinglePath), Map.empty[String, String])
+    checkAnswer(df,
+      Row("option1-0,option2-0") ::
+      Row("option1-1,option2-1") ::
+      Row("option1-2,option2-2") ::
+      Row("option1-3,option2-3") ::
+      Row("option1-4,option2-4") :: Nil)
+  }
+
+  test("read zip file with multiple entries (2)") {
+    val zip = new ZipFormat()
+    val df = zip.create(sqlContext, Array(zipMultiPath), Map.empty[String, String])
+    checkAnswer(df,
+      Row("option1-0,option2-0") ::
+      Row("option1-1,option2-1") ::
+      Row("option1-2,option2-2") ::
+      Row("option1-3,option2-3") ::
+      Row("option1-4,option2-4") ::
+      Row("""{"opt1": "option1-0", "opt2": "option2-0"}""") ::
+      Row("""{"opt1": "option1-1", "opt2": "option2-1"}""") ::
+      Row("""{"opt1": "option1-2", "opt2": "option2-2"}""") ::
+      Row("""{"opt1": "option1-3", "opt2": "option2-3"}""") ::
+      Row("""{"opt1": "option1-4", "opt2": "option2-4"}""") :: Nil)
+  }
+
+  test("read empty zip file") {
+
   }
 }
