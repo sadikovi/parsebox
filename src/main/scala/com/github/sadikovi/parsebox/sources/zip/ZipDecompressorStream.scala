@@ -34,6 +34,9 @@ private[parsebox] class ZipDecompressorStream(
   private val zip = new ZipInputStream(in)
   private val oneByte: Array[Byte] = new Array[Byte](1)
 
+  /** Check if decompressor is set or not, mainly for testing */
+  private[parsebox] def isDecompressorSet(): Boolean = decompressor != null
+
   override def read(): Int = {
     if (read(oneByte, 0, oneByte.length) == -1) -1 else (oneByte(0) & 0xff)
   }

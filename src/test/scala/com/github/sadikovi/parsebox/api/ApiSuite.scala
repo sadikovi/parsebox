@@ -28,7 +28,6 @@ import com.github.sadikovi.parsebox.examples.zip.{DefaultFormat => ZipFormat}
 import com.github.sadikovi.testutil.{UnitTestSpec, SparkLocal}
 import com.github.sadikovi.testutil.implicits._
 
-
 class ApiSuite extends UnitTestSpec with SparkLocal {
   // define global Spark SQL context
   var sqlContext: SQLContext = null
@@ -38,6 +37,7 @@ class ApiSuite extends UnitTestSpec with SparkLocal {
   val splunkPath = testDirectory / "resources" / "splunk" / "sample.txt"
   val zipSinglePath = testDirectory / "resources" / "zip" / "single.zip"
   val zipMultiPath = testDirectory / "resources" / "zip" / "multi.zip"
+  val zipEmptyPath = testDirectory / "resources" / "zip" / "empty.zip"
 
   override def beforeAll(configMap: ConfigMap) {
     startSparkContext()
@@ -234,6 +234,8 @@ class ApiSuite extends UnitTestSpec with SparkLocal {
   }
 
   test("read empty zip file") {
-
+    val zip = new ZipFormat()
+    val df = zip.create(sqlContext, Array(zipEmptyPath), Map.empty[String, String])
+    df.count() should be (0)
   }
 }

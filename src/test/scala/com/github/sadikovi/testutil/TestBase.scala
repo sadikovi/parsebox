@@ -16,6 +16,7 @@
 
 package com.github.sadikovi.testutil
 
+import java.io.InputStream
 import java.util.UUID
 
 import org.apache.hadoop.conf.{Configuration => HadoopConf}
@@ -78,6 +79,13 @@ trait TestBase {
     val p = new HadoopPath(path)
     val fs = p.getFileSystem(new HadoopConf(false))
     fs.delete(p, recursive)
+  }
+
+  /** open file for a path */
+  final protected def open(path: String): InputStream = {
+    val p = new HadoopPath(path)
+    val fs = p.getFileSystem(new HadoopConf(false))
+    fs.open(p)
   }
 
   /** compare two DataFrame objects */
