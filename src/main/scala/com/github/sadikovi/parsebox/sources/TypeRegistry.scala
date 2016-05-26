@@ -26,21 +26,21 @@ import com.github.sadikovi.parsebox.api.{RecordType, Opt1RecordType, Opt2RecordT
 /** Type registry to lookup type information and register external types */
 object TypeRegistry {
   // Map of provided external types
-  private val externalTypes: JHashSet[Class[_<:RecordType]] = new JHashSet()
+  private val externalTypes: JHashSet[Class[_ <: RecordType]] = new JHashSet()
   private val logger = LoggerFactory.getLogger(getClass())
 
   /** Provided internal types that we know from the beginning */
-  private def providedTypes: Set[Class[_<:RecordType]] = Set(
+  private def providedTypes: Set[Class[_ <: RecordType]] = Set(
     classOf[Opt1RecordType],
     classOf[Opt2RecordType])
 
   /** Check if class is registered already or provided external class */
-  def exists(klass: Class[_<:RecordType]): Boolean = {
+  def exists(klass: Class[_ <: RecordType]): Boolean = {
     providedTypes.contains(klass) || externalTypes.contains(klass)
   }
 
   /** Register external class */
-  def register(klass: Class[_<:RecordType]): Boolean = {
+  def register(klass: Class[_ <: RecordType]): Boolean = {
     if (exists(klass)) {
       // Return false since class is already registered
       logger.info(s"Class $klass is already registered, no-op")

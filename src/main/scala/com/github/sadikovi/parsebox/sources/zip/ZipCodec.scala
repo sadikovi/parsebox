@@ -35,7 +35,7 @@ private[parsebox] class ZipCodec extends CompressionCodec {
     throw new UnsupportedOperationException()
   }
 
-  override def getCompressorType(): Class[_<:Compressor] = {
+  override def getCompressorType(): Class[_ <: Compressor] = {
     throw new UnsupportedOperationException()
   }
 
@@ -51,7 +51,7 @@ private[parsebox] class ZipCodec extends CompressionCodec {
     new ZipDecompressorStream(in, decompr)
   }
 
-  override def getDecompressorType(): Class[_<:Decompressor] = classOf[ZipDecompressor]
+  override def getDecompressorType(): Class[_ <: Decompressor] = classOf[ZipDecompressor]
 
   override def createDecompressor(): Decompressor = new ZipDecompressor()
 

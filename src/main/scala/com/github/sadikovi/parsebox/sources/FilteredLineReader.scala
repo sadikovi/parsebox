@@ -34,7 +34,7 @@ import com.github.sadikovi.parsebox.api.RecordType
  * `onFailure` to handled exceptions and not use regular expressions, unless patterns are created
  * globally, not per record (affects performance).
  */
-private[parsebox] abstract class FilteredLineReader[T<:RecordType](
+private[parsebox] abstract class FilteredLineReader[T <: RecordType](
     private val recordClass: Class[T],
     private val delimiter: Array[Byte])
   extends NewHadoopRecordReader[T, NullWritable] {

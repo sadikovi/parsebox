@@ -73,7 +73,7 @@ trait BaseFormat {
  * [[TypedFormat]] allows to specify [[RecordType]] instead of creating schema manually.
  * All methods except `dataSchema()` should be overwritten, similar to [[BaseFormat]].
  */
-trait TypedFormat[T<:RecordType] extends BaseFormat {
+trait TypedFormat[T <: RecordType] extends BaseFormat {
 
   /** Get class for individual record. Usually it is just classOf[MyRecordType] */
   def recordClass(): Class[T]
@@ -91,7 +91,7 @@ trait TypedFormat[T<:RecordType] extends BaseFormat {
  * record type, and final DataFrame schema should match defined type schema, otherwise exception is
  * thrown.
  */
-abstract class ExternalFormat[T<:RecordType] extends TypedFormat[T]
+abstract class ExternalFormat[T <: RecordType] extends TypedFormat[T]
 
 /**
  * [[HadoopFormat]] provides API for custom file-based parser. Hadoop `InputFormat` resolves file
@@ -104,7 +104,7 @@ abstract class ExternalFormat[T<:RecordType] extends TypedFormat[T]
  * Filtering results in function call for every string regardless of actual implementation, it is
  * not recommended to use regular expressions, unless they are defined globally.
  */
-abstract class HadoopFormat[T<:RecordType]
+abstract class HadoopFormat[T <: RecordType]
     extends NewFileInputFormat[T, NullWritable] with TypedFormat[T] {
 
   /** Get class for individual record. Usually it is just classOf[MyRecordType] */
