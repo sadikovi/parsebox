@@ -16,7 +16,7 @@
 
 package com.github.sadikovi.parsebox.sources.zip
 
-import java.io.InputStream
+import java.io.{BufferedInputStream, InputStream}
 import java.util.zip.ZipInputStream
 
 import org.apache.hadoop.io.compress.{CompressionInputStream, Decompressor}
@@ -31,7 +31,7 @@ private[parsebox] class ZipDecompressorStream(
     decompressor: Decompressor) extends CompressionInputStream(in) {
   def this(in: InputStream) = this(in, null)
 
-  private val zip = new ZipInputStream(in)
+  private val zip = new ZipInputStream(new BufferedInputStream(in))
   private val oneByte: Array[Byte] = new Array[Byte](1)
 
   /** Check if decompressor is set or not, mainly for testing */

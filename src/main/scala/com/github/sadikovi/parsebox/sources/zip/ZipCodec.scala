@@ -28,20 +28,16 @@ import org.apache.hadoop.io.compress.{CompressionCodec, Compressor, CompressionI
  */
 private[parsebox] class ZipCodec extends CompressionCodec {
   override def createOutputStream(out: OutputStream): CompressionOutputStream = {
-    throw new UnsupportedOperationException()
+    new ZipCompressorStream(out, createCompressor())
   }
 
   override def createOutputStream(out: OutputStream, compr: Compressor): CompressionOutputStream = {
-    throw new UnsupportedOperationException()
+    new ZipCompressorStream(out, compr)
   }
 
-  override def getCompressorType(): Class[_ <: Compressor] = {
-    throw new UnsupportedOperationException()
-  }
+  override def getCompressorType(): Class[_ <: Compressor] = classOf[ZipCompressor]
 
-  override def createCompressor(): Compressor = {
-    throw new UnsupportedOperationException()
-  }
+  override def createCompressor(): Compressor = new ZipCompressor()
 
   override def createInputStream(in: InputStream): CompressionInputStream = {
     new ZipDecompressorStream(in, createDecompressor())

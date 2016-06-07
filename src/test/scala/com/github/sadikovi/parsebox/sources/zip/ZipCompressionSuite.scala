@@ -46,24 +46,34 @@ class ZipCompressionSuite extends UnitTestSpec {
 
   test("create zip output stream") {
     val zip = new ZipCodec()
-    intercept[UnsupportedOperationException] {
-      zip.createOutputStream(null)
+    withTempDir { dir =>
+      val temp = createTempFile(dir)
+      val out = create(temp.toString)
+      try {
+        val zipStream = zip.createOutputStream(out)
+        zipStream.getClass should be (classOf[ZipCompressorStream])
+      } finally {
+        out.close()
+      }
     }
 
-    intercept[UnsupportedOperationException] {
-      zip.createOutputStream(null, zip.createCompressor())
+    withTempDir { dir =>
+      val temp = createTempFile(dir)
+      val out = create(temp.toString)
+      // Creating stream with compressor
+      try {
+        val zipStream = zip.createOutputStream(out, zip.createCompressor())
+        zipStream.getClass should be (classOf[ZipCompressorStream])
+      } finally {
+        out.close()
+      }
     }
   }
 
   test("get zip compressor") {
     val zip = new ZipCodec()
-    intercept[UnsupportedOperationException] {
-      zip.getCompressorType()
-    }
-
-    intercept[UnsupportedOperationException] {
-      zip.createCompressor()
-    }
+    zip.getCompressorType() should be (classOf[ZipCompressor])
+    zip.createCompressor().getClass should be (classOf[ZipCompressor])
   }
 
   test("create zip input stream") {
@@ -96,5 +106,36 @@ class ZipCompressionSuite extends UnitTestSpec {
   test("get zip extension") {
     val zip = new ZipCodec()
     zip.getDefaultExtension() should be (".zip")
+  }
+
+  test("write and read zip file") {
+    val zip = new ZipCodec()
+    withTempDir { dir =>
+      val temp = createTempFile(dir)
+      val data: Array[Byte] = Array(1, 2, 3, 4)
+      val result: Array[Byte] = new Array(data.length)
+
+      // Write data into temporary file
+      val out = create(temp.toString)
+      try {
+        val outputStream = zip.createOutputStream(out)
+        outputStream.write(data, 0, data.length)
+        outputStream.close()
+      } finally {
+        out.close()
+      }
+
+      // Read data from temporary file
+      val in = open(temp.toString)
+      try {
+        val inputStream = zip.createInputStream(in)
+        inputStream.read(result, 0, result.length)
+        inputStream.close()
+      } finally {
+        in.close()
+      }
+
+      result should be (data)
+    }
   }
 }

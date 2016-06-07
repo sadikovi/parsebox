@@ -16,7 +16,7 @@
 
 package com.github.sadikovi.testutil
 
-import java.io.InputStream
+import java.io.{InputStream, OutputStream}
 import java.util.UUID
 
 import org.apache.hadoop.conf.{Configuration => HadoopConf}
@@ -88,6 +88,13 @@ trait TestBase {
     fs.open(p)
   }
 
+  /** create new file for a path */
+  final protected def create(path: String): OutputStream = {
+    val p = new HadoopPath(path)
+    val fs = p.getFileSystem(new HadoopConf(false))
+    fs.create(p)
+  }
+
   /** compare two DataFrame objects */
   final protected def checkAnswer(df: DataFrame, expected: DataFrame): Unit = {
     val got = df.collect().map(_.toString()).sortWith(_ < _)
@@ -104,11 +111,16 @@ trait TestBase {
   /** Create temporary directory on local file system */
   def createTempDir(
       root: String = System.getProperty("java.io.tmpdir"),
-      namePrefix: String = "netflow"): HadoopPath = {
+      namePrefix: String = "parsebox"): HadoopPath = {
     val dir = new HadoopPath(root / namePrefix / UUID.randomUUID().toString)
     val fs = dir.getFileSystem(new HadoopConf(false))
     fs.mkdirs(dir)
     dir
+  }
+
+  /** Create temporary file path, no actual file created */
+  def createTempFile(dir: HadoopPath, namePrefix: String = "parsebox"): HadoopPath = {
+    dir.suffix("" / s"$namePrefix-${UUID.randomUUID()}")
   }
 
   /** Execute block of code with temporary hadoop path */
